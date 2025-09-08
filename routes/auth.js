@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const User = require('../models/user');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const User = require("../models/user");
 
 /**
  * @swagger
@@ -40,14 +40,14 @@ const User = require('../models/user');
  *       400:
  *         description: Помилка реєстрації
  */
-router.post('/register', async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = new User({ username, password });
     await user.save();
-    res.status(201).json({ message: 'Користувача зареєстровано успішно!' });
+    res.status(201).json({ message: "Користувача зареєстровано успішно!" });
   } catch (error) {
-    res.status(400).json({ message: 'Помилка реєстрації', error });
+    res.status(400).json({ message: "Помилка реєстрації", error });
   }
 });
 
@@ -93,23 +93,25 @@ router.post('/register', async (req, res) => {
  *       500:
  *         description: Помилка сервера
  */
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(400).json({ message: 'Неправильний логін або пароль' });
-    }
-    
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Неправильний логін або пароль' });
+      return res.status(400).json({ message: "Неправильний логін або пароль" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ message: 'Вхід успішний!', token });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Неправильний логін або пароль" });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.json({ message: "Вхід успішний!", token });
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера', error });
+    res.status(500).json({ message: "Помилка сервера", error });
   }
 });
 

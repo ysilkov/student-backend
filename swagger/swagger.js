@@ -53,7 +53,6 @@ const swaggerOptions = {
             phone: '0987654321'
           }
         },
-        // Не забудьте додати сюди Subject та AcademicPlan
       },
       securitySchemes: {
         bearerAuth: {

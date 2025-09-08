@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Student = require('../models/student');
+const Student = require("../models/student");
 
 /**
  * @swagger
@@ -9,13 +9,12 @@ const Student = require('../models/student');
  *     description: Управління даними студентів
  */
 
-// Middleware для пошуку студента за ID
 async function getStudent(req, res, next) {
   let student;
   try {
     student = await Student.findById(req.params.id);
     if (student == null) {
-      return res.status(404).json({ message: 'Студента не знайдено' });
+      return res.status(404).json({ message: "Студента не знайдено" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -42,7 +41,7 @@ async function getStudent(req, res, next) {
  *       500:
  *         description: Помилка сервера
  */
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const students = await Student.find();
     res.json(students);
@@ -77,7 +76,7 @@ router.get('/', async (req, res) => {
  *         description: Помилка сервера
  */
 
-router.get('/:id', getStudent, (req, res) => {
+router.get("/:id", getStudent, async (req, res) => {
   res.json(res.student);
 });
 
@@ -104,7 +103,7 @@ router.get('/:id', getStudent, (req, res) => {
  *         description: Некоректні дані
  */
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   const student = new Student({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -153,7 +152,7 @@ router.post('/', async (req, res) => {
  *         description: Студента не знайдено
  */
 
-router.patch('/:id', getStudent, async (req, res) => {
+router.patch("/:id", getStudent, async (req, res) => {
   if (req.body.firstName != null) res.student.firstName = req.body.firstName;
   if (req.body.lastName != null) res.student.lastName = req.body.lastName;
   if (req.body.middleName != null) res.student.middleName = req.body.middleName;
@@ -190,10 +189,10 @@ router.patch('/:id', getStudent, async (req, res) => {
  *         description: Помилка сервера
  */
 
-router.delete('/:id', getStudent, async (req, res) => {
+router.delete("/:id", getStudent, async (req, res) => {
   try {
     await res.student.deleteOne();
-    res.json({ message: 'Студента видалено' });
+    res.json({ message: "Студента видалено" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
